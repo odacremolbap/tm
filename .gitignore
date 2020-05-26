@@ -10,7 +10,7 @@
 /.vscode/
 
 # Build artifacts
-tm
+/tm
 tm-darwin-amd64
 tm-linux-amd64
 tm-windows-amd64.exe

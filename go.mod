@@ -4,7 +4,6 @@ go 1.13
 
 require (
 	contrib.go.opencensus.io/exporter/ocagent v0.6.0 // indirect
-	contrib.go.opencensus.io/exporter/stackdriver v0.12.9 // indirect
 	github.com/docker/spdystream v0.0.0-20181023171402-6480d4af844c // indirect
 	github.com/dsnet/compress v0.0.1 // indirect
 	github.com/frankban/quicktest v1.7.2 // indirect
@@ -25,19 +24,22 @@ require (
 	github.com/tektoncd/pipeline v0.11.2
 	github.com/tektoncd/triggers v0.1.0
 	github.com/tidwall/gjson v1.3.2 // indirect
-	golang.org/x/crypto v0.0.0-20191206172530-e9b2fee46413
+	golang.org/x/crypto v0.0.0-20200220183623-bac4c82f6975
 	google.golang.org/genproto v0.0.0-20191028173616-919d9bdd9fe6 // indirect
 	gopkg.in/src-d/go-git.v4 v4.13.1
 	gopkg.in/yaml.v2 v2.2.5
-	k8s.io/api v0.17.2
-	k8s.io/apimachinery v0.17.2
-	k8s.io/client-go v0.17.0
+	gotest.tools v2.2.0+incompatible
+	k8s.io/api v0.17.4
+	k8s.io/apimachinery v0.17.4
+	k8s.io/client-go v0.17.4
 	k8s.io/utils v0.0.0-20191030222137-2b95a09bc58d // indirect
-	knative.dev/eventing v0.12.0
+	knative.dev/client v0.14.0 // indirect
+	knative.dev/eventing v0.14.1
 	knative.dev/eventing-contrib v0.11.2
-	knative.dev/pkg v0.0.0-20200207155214-fef852970f43
-	knative.dev/serving v0.12.0
+	knative.dev/pkg v0.0.0-20200414233146-0eed424fa4ee
+	knative.dev/serving v0.14.0
 	sigs.k8s.io/controller-runtime v0.4.0 // indirect
+	sigs.k8s.io/yaml v1.1.0
 )
 
 replace (
