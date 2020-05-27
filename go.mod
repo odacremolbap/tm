@@ -14,6 +14,7 @@ require (
 	github.com/sirupsen/logrus v1.4.2
 	github.com/spf13/afero v1.2.2
 	github.com/spf13/cobra v0.0.6
+	github.com/spf13/pflag v1.0.5
 	github.com/stretchr/testify v1.5.1
 	github.com/tektoncd/pipeline v0.12.1
 	github.com/tektoncd/triggers v0.1.0
@@ -25,13 +26,13 @@ require (
 	k8s.io/api v0.17.4
 	k8s.io/apimachinery v0.17.4
 	k8s.io/client-go v12.0.0+incompatible
+	knative.dev/client v0.14.0
 
 	// knative
-	knative.dev/eventing v0.15.0
-	knative.dev/eventing-contrib v0.15.0
+	knative.dev/eventing v0.14.1
+	knative.dev/eventing-contrib v0.14.0
 	knative.dev/pkg v0.0.0-20200527024749-495174c96651
-	knative.dev/serving v0.15.0
-
+	knative.dev/serving v0.14.0
 	sigs.k8s.io/yaml v1.2.0
 )
 

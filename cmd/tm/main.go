@@ -16,8 +16,10 @@ limitations under the License.
 
 package main
 
-import "github.com/triggermesh/tm/cmd"
+import "github.com/triggermesh/tm/pkg/tm"
 
 func main() {
-	cmd.Execute()
+	root := tm.NewRootCommand()
+	root.Execute()
+	// cmd.Execute()
 }
