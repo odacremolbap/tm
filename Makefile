@@ -17,7 +17,7 @@ GOTEST       ?= gotestsum --junitfile $(OUTPUT_DIR)$(PACKAGE)-unit-tests.xml --f
 GOTOOL       ?= go tool
 GLIDE        ?= glide
 
-LDFLAGS      += -s -w -X $(GIT_REPO)/cmd.version=${GIT_TAG}
+LDFLAGS      += -s -w -X $(GIT_REPO)/cmd/cmd.version=${GIT_TAG}
 
 .PHONY: help mod-download build release install test coverage lint vet fmt fmt-test image clean
 
@@ -30,7 +30,7 @@ mod-download: ## Download go modules
 	$(GO) mod download
 
 build: ## Build the tm binary
-	$(GO) build -v -mod=readonly -ldflags="$(LDFLAGS)" $(GIT_REPO)
+	$(GO) build -v -mod=readonly -ldflags="$(LDFLAGS)" $(GIT_REPO)/cmd
 
 install: ## Install the binary
 	$(GO) install -v -mod=readonly -ldflags="$(LDFLAGS)" $(GIT_REPO)

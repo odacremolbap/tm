@@ -32,7 +32,6 @@ import (
 	printerwrapper "github.com/triggermesh/tm/pkg/printer"
 	githubSource "knative.dev/eventing-contrib/github/pkg/client/clientset/versioned"
 	eventingApi "knative.dev/eventing/pkg/client/clientset/versioned"
-	legacyEventingApi "knative.dev/eventing/pkg/legacyclient/clientset/versioned"
 	servingApi "knative.dev/serving/pkg/client/clientset/versioned"
 
 	"k8s.io/client-go/kubernetes"
@@ -78,7 +77,6 @@ type ConfigSet struct {
 	Core            *kubernetes.Clientset
 	Build           *buildApi.Clientset
 	Serving         *servingApi.Clientset
-	LegacyEventing  *legacyEventingApi.Clientset
 	Eventing        *eventingApi.Clientset
 	GithubSource    *githubSource.Clientset
 	TektonPipelines *tektonResource.Clientset
@@ -183,9 +181,6 @@ func NewClient(cfgFile string, output ...io.Writer) (ConfigSet, error) {
 	}
 
 	if c.Eventing, err = eventingApi.NewForConfig(config); err != nil {
-		return c, err
-	}
-	if c.LegacyEventing, err = legacyEventingApi.NewForConfig(config); err != nil {
 		return c, err
 	}
 	if c.Build, err = buildApi.NewForConfig(config); err != nil {

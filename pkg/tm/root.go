@@ -1,15 +1,19 @@
 package tm
 
-import "github.com/spf13/cobra"
+import (
+	"github.com/spf13/cobra"
+	"github.com/triggermesh/tm/pkg/tm/commands/version"
+)
 
 // NewRootCommand creates the root command for tm
-func NewRootCommand() {
+func NewRootCommand() *cobra.Command {
+	return newRootCommand()
 	// root := newRootCommand() {
 
 	// }
 }
 
-func newRootCommand() {
+func newRootCommand() *cobra.Command {
 
 	rootCmd := &cobra.Command{
 		Use:   "tm",
@@ -20,7 +24,9 @@ func newRootCommand() {
 * Build container images.
 * Integrate functions at Git repos.`,
 		SilenceUsage: true,
-		Version:      version,
 	}
 
+	rootCmd.AddCommand(version.NewVersionCommand())
+
+	return rootCmd
 }

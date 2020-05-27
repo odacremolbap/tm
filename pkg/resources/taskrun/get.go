@@ -20,7 +20,7 @@ import (
 	"github.com/triggermesh/tm/pkg/client"
 	"github.com/triggermesh/tm/pkg/printer"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	duckv1beta1 "knative.dev/pkg/apis/duck/v1beta1"
+	duckv1 "knative.dev/pkg/apis/duck/v1"
 )
 
 // GetObject converts k8s object into printable structure
@@ -33,7 +33,7 @@ func (tr *TaskRun) GetObject(taskrun *v1beta1.TaskRun) printer.Object {
 			"Name":              metav1.ObjectMeta{}.Name,
 			"CreationTimestamp": metav1.Time{},
 			"Spec":              v1alpha1.TaskRunSpec{},
-			"Conditions":        duckv1beta1.Conditions{},
+			"Conditions":        duckv1.Conditions{},
 		},
 		K8sObject: taskrun,
 	}

@@ -3,43 +3,36 @@ module github.com/triggermesh/tm
 go 1.13
 
 require (
-	contrib.go.opencensus.io/exporter/ocagent v0.6.0 // indirect
 	github.com/docker/spdystream v0.0.0-20181023171402-6480d4af844c // indirect
-	github.com/dsnet/compress v0.0.1 // indirect
-	github.com/frankban/quicktest v1.7.2 // indirect
 	github.com/ghodss/yaml v1.0.0
-	github.com/golang/groupcache v0.0.0-20191027212112-611e8accdfc9 // indirect
+	github.com/google/go-containerregistry v0.0.0-20200413145205-82d30a103c0a // indirect
 	github.com/knative/build v0.7.0
 	github.com/knative/pkg v0.0.0-20190624141606-d82505e6c5b4
 	github.com/mholt/archiver v2.1.0+incompatible
-	github.com/nwaples/rardecode v1.0.0 // indirect
 	github.com/olekukonko/tablewriter v0.0.4
-	github.com/openzipkin/zipkin-go v0.2.2 // indirect
 	github.com/pierrec/lz4 v2.4.0+incompatible // indirect
-	github.com/robfig/cron v1.2.0 // indirect
 	github.com/sirupsen/logrus v1.4.2
 	github.com/spf13/afero v1.2.2
-	github.com/spf13/cobra v0.0.5
-	github.com/stretchr/testify v1.4.0
-	github.com/tektoncd/pipeline v0.11.2
+	github.com/spf13/cobra v0.0.6
+	github.com/stretchr/testify v1.5.1
+	github.com/tektoncd/pipeline v0.12.1
 	github.com/tektoncd/triggers v0.1.0
 	github.com/tidwall/gjson v1.3.2 // indirect
-	golang.org/x/crypto v0.0.0-20200220183623-bac4c82f6975
-	google.golang.org/genproto v0.0.0-20191028173616-919d9bdd9fe6 // indirect
+	golang.org/x/crypto v0.0.0-20200323165209-0ec3e9974c59
 	gopkg.in/src-d/go-git.v4 v4.13.1
-	gopkg.in/yaml.v2 v2.2.5
+	gopkg.in/yaml.v2 v2.3.0
 	gotest.tools v2.2.0+incompatible
 	k8s.io/api v0.17.4
 	k8s.io/apimachinery v0.17.4
-	k8s.io/client-go v0.17.4
-	k8s.io/utils v0.0.0-20191030222137-2b95a09bc58d // indirect
-	knative.dev/client v0.14.0 // indirect
-	knative.dev/eventing v0.14.1
-	knative.dev/eventing-contrib v0.11.2
-	knative.dev/pkg v0.0.0-20200414233146-0eed424fa4ee
-	knative.dev/serving v0.14.0
-	sigs.k8s.io/controller-runtime v0.4.0 // indirect
-	sigs.k8s.io/yaml v1.1.0
+	k8s.io/client-go v12.0.0+incompatible
+
+	// knative
+	knative.dev/eventing v0.15.0
+	knative.dev/eventing-contrib v0.15.0
+	knative.dev/pkg v0.0.0-20200527024749-495174c96651
+	knative.dev/serving v0.15.0
+
+	sigs.k8s.io/yaml v1.2.0
 )
 
 replace (
@@ -63,5 +56,4 @@ replace (
 	k8s.io/legacy-cloud-providers => k8s.io/legacy-cloud-providers v0.0.0-20191016115707-22244e5b01eb
 	k8s.io/metrics => k8s.io/metrics v0.0.0-20191016113728-f445c7b35c1c
 	k8s.io/sample-apiserver => k8s.io/sample-apiserver v0.0.0-20191016112728-ceb381866e80
-	knative.dev/pkg => knative.dev/pkg v0.0.0-20200122022923-4e81bc3c320f
 )
