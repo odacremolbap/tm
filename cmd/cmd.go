@@ -82,7 +82,7 @@ func Execute() {
 
 func init() {
 	cobra.OnInitialize(initConfig)
-	tmCmd.PersistentFlags().StringVar(&kubeConf, "config", "", "k8s config file")
+	tmCmd.PersistentFlags().StringVar(&kubeConf, "config", client.ConfigPath(""), "triggermesh or kubeconfig file")
 	tmCmd.PersistentFlags().StringVarP(&client.Namespace, "namespace", "n", "", "User namespace")
 	tmCmd.PersistentFlags().BoolVarP(&debug, "debug", "d", false, "Enable debug output")
 	tmCmd.PersistentFlags().StringVar(&registryHost, "registry-host", "knative.registry.svc.cluster.local", "Docker registry host address")
