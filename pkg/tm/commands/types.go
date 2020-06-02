@@ -25,7 +25,6 @@ import (
 	"k8s.io/client-go/rest"
 	"k8s.io/client-go/tools/clientcmd"
 	eventing "knative.dev/eventing/pkg/client/clientset/versioned/typed/eventing/v1alpha1"
-	sourcesv1alpha2client "knative.dev/eventing/pkg/client/clientset/versioned/typed/sources/v1alpha2"
 	servingv1client "knative.dev/serving/pkg/client/clientset/versioned/typed/serving/v1"
 
 	"knative.dev/client/pkg/sources/v1alpha2"
@@ -72,10 +71,6 @@ func (params *TmParams) Initialize() {
 		params.NewServingClient = params.newServingClient
 	}
 
-	if params.NewSourcesClient == nil {
-		params.NewSourcesClient = params.newSourcesClient
-	}
-
 	if params.NewEventingClient == nil {
 		params.NewEventingClient = params.newEventingClient
 	}
@@ -93,16 +88,6 @@ func (params *TmParams) newServingClient(namespace string) (clientservingv1.KnSe
 
 	client, _ := servingv1client.NewForConfig(restConfig)
 	return clientservingv1.NewKnServingClient(client, namespace), nil
-}
-
-func (params *TmParams) newSourcesClient(namespace string) (v1alpha2.KnSourcesClient, error) {
-	restConfig, err := params.RestConfig()
-	if err != nil {
-		return nil, err
-	}
-
-	client, _ := sourcesv1alpha2client.NewForConfig(restConfig)
-	return v1alpha2.NewKnSourcesClient(client, namespace), nil
 }
 
 func (params *TmParams) newEventingClient(namespace string) (clienteventingv1alpha1.KnEventingClient, error) {

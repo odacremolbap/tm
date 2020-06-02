@@ -1,3 +1,7 @@
+# Local configurations and secrets
+/.env/
+/.local/
+
 # Continuous integration
 **/c.out
 **/tm-coverage.html
@@ -14,3 +18,4 @@
 tm-darwin-amd64
 tm-linux-amd64
 tm-windows-amd64.exe
+

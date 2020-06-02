@@ -21,6 +21,7 @@ import (
 	"fmt"
 
 	"github.com/spf13/cobra"
+	"github.com/triggermesh/tm/pkg/tm/commands"
 	"sigs.k8s.io/yaml"
 )
 
@@ -46,7 +47,7 @@ type knVersion struct {
 }
 
 // NewVersionCommand implements 'tm version' command
-func NewVersionCommand() *cobra.Command {
+func NewVersionCommand(p *commands.TmParams) *cobra.Command {
 	versionCmd := &cobra.Command{
 		Use:   "version",
 		Short: "Prints tm version",
