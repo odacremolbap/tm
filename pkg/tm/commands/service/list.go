@@ -1,4 +1,4 @@
-// Copyright © 2019 The Knative Authors
+// Copyright 2019 TriggerMesh, Inc
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -16,83 +16,62 @@ package service
 
 import (
 	"fmt"
-	"sort"
+	"time"
 
-	"github.com/spf13/cobra"
-	"knative.dev/client/pkg/kn/commands/flags"
-	clientservingv1 "knative.dev/client/pkg/serving/v1"
+	"github.com/triggermesh/tm/pkg/client"
+	"github.com/triggermesh/tm/pkg/printer"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"k8s.io/apimachinery/pkg/util/duration"
 	servingv1 "knative.dev/serving/pkg/apis/serving/v1"
-
-	"github.com/triggermesh/tm/pkg/tm/commands"
 )
 
-// newServiceListCommand represents 'tm service list' command
-func newServiceListCommand(p *commands.TmParams) *cobra.Command {
-	serviceListFlags := flags.NewListPrintFlags(ServiceListHandlers)
-
-	serviceListCommand := &cobra.Command{
-		Use:   "list [name]",
-		Short: "List available services.",
-		Example: `
-  # List all services
-  tm service list
-
-  # List all services in JSON output format
-  tm service list -o json`,
-		RunE: func(cmd *cobra.Command, args []string) error {
-			namespace, err := p.GetNamespace(cmd)
-			if err != nil {
-				return err
-			}
-			client, err := p.NewServingClient(namespace)
-			if err != nil {
-				return err
-			}
-			serviceList, err := getServiceInfo(args, client)
-			if err != nil {
-				return err
-			}
-			if len(serviceList.Items) == 0 {
-				fmt.Fprintf(cmd.OutOrStdout(), "No services found.\n")
-				return nil
-			}
-
-			// empty namespace indicates all-namespaces flag is specified
-			if namespace == "" {
-				serviceListFlags.EnsureWithNamespace()
-			}
-
-			// Sort serviceList by namespace and name (in this order)
-			sort.SliceStable(serviceList.Items, func(i, j int) bool {
-				a := serviceList.Items[i]
-				b := serviceList.Items[j]
-
-				if a.Namespace != b.Namespace {
-					return a.Namespace < b.Namespace
-				}
-				return a.ObjectMeta.Name < b.ObjectMeta.Name
-			})
-
-			return serviceListFlags.Print(serviceList, cmd.OutOrStdout())
+// GetTable converts k8s list instance into printable object
+func (s *Service) GetTable(list *servingv1.ServiceList) printer.Table {
+	table := printer.Table{
+		Headers: []string{
+			"Namespace",
+			"Name",
+			"Url",
+			"Age",
+			"Ready",
+			"Reason",
 		},
+		Rows: make([][]string, 0, len(list.Items)),
 	}
-	commands.AddNamespaceFlags(serviceListCommand.Flags(), true)
-	serviceListFlags.AddFlags(serviceListCommand)
-	return serviceListCommand
+
+	for _, item := range list.Items {
+		table.Rows = append(table.Rows, s.row(&item))
+	}
+	return table
 }
 
-func getServiceInfo(args []string, client clientservingv1.KnServingClient) (*servingv1.ServiceList, error) {
-	var (
-		serviceList *servingv1.ServiceList
-		err         error
-	)
-	switch len(args) {
-	case 0:
-		serviceList, err = client.ListServices()
-	case 1:
-		serviceList, err = client.ListServices(clientservingv1.WithName(args[0]))
-	default:
-		return nil, fmt.Errorf("'tm service list' accepts maximum 1 argument")
+func (s *Service) row(item *servingv1.Service) []string {
+	name := item.Name
+	namespace := item.Namespace
+	url := item.Status.URL.String()
+	// lastestRevision := item.Status.ConfigurationStatusFields.LatestReadyRevisionName
+	age := duration.HumanDuration(time.Since(item.GetCreationTimestamp().Time))
+	ready := fmt.Sprintf("%v", item.Status.IsReady())
+	readyCondition := item.Status.GetCondition(servingv1.ServiceConditionReady)
+	reason := ""
+	if readyCondition != nil {
+		reason = readyCondition.Reason
 	}
-	return serviceList, err
+
+	row := []string{
+		namespace,
+		name,
+		url,
+		// lastestRevision,
+		age,
+		ready,
+		reason,
+	}
+
+	return row
+}
+
+// List returns k8s list object
+func (s *Service) List(clientset *client.ConfigSet) (*servingv1.ServiceList, error) {
+	return clientset.Serving.ServingV1().Services(s.Namespace).List(metav1.ListOptions{})
 }

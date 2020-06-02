@@ -16,22 +16,15 @@ package commands
 
 import (
 	"fmt"
-	"io"
+	"log"
 	"os"
 	"path/filepath"
 	"runtime"
 
+	"github.com/triggermesh/tm/pkg/client"
 	"k8s.io/client-go/rest"
 	"k8s.io/client-go/tools/clientcmd"
-	eventing "knative.dev/eventing/pkg/client/clientset/versioned/typed/eventing/v1alpha1"
-	servingv1client "knative.dev/serving/pkg/client/clientset/versioned/typed/serving/v1"
-
-	"knative.dev/client/pkg/sources/v1alpha2"
 	"knative.dev/client/pkg/util"
-
-	clientdynamic "knative.dev/client/pkg/dynamic"
-	clienteventingv1alpha1 "knative.dev/client/pkg/eventing/v1alpha1"
-	clientservingv1 "knative.dev/client/pkg/serving/v1"
 )
 
 // CfgFile is tm's config file is the path for the Kubernetes config
@@ -44,51 +37,70 @@ type Config struct {
 
 // TmParams for creating commands. Useful for inserting mocks for testing.
 type TmParams struct {
-	Output            io.Writer
-	KubeCfgPath       string
-	ClientConfig      clientcmd.ClientConfig
-	NewServingClient  func(namespace string) (clientservingv1.KnServingClient, error)
-	NewSourcesClient  func(namespace string) (v1alpha2.KnSourcesClient, error)
-	NewEventingClient func(namespace string) (clienteventingv1alpha1.KnEventingClient, error)
-	NewDynamicClient  func(namespace string) (clientdynamic.KnDynamicClient, error)
+	// Output            io.Writer
+	KubeCfgPath  string
+	ClientConfig clientcmd.ClientConfig
+	// NewServingClient  func(namespace string) (clientservingv1.KnServingClient, error)
+	// NewSourcesClient  func(namespace string) (v1alpha2.KnSourcesClient, error)
+	// NewEventingClient func(namespace string) (clienteventingv1alpha1.KnEventingClient, error)
+	// NewDynamicClient  func(namespace string) (clientdynamic.KnDynamicClient, error)
 
-	// General global options
-	LogHTTP bool
+	ConfigSet *ConfigSet
 
-	// Set this if you want to nail down the namespace
+	// // General global options
+	// LogHTTP bool
+
+	// // Set this if you want to nail down the namespace
 	fixedCurrentNamespace string
 }
 
 // Initialize clients
-func (params *TmParams) Initialize() {
-	if params.NewServingClient == nil {
-		params.NewServingClient = params.newServingClient
-	}
+func (p *TmParams) Initialize() {
 
-	if params.NewEventingClient == nil {
-		params.NewEventingClient = params.newEventingClient
-	}
-}
-
-func (params *TmParams) newServingClient(namespace string) (clientservingv1.KnServingClient, error) {
-	restConfig, err := params.RestConfig()
+	confPath := ConfigPath(p.KubeCfgPath)
+	configset, err := NewClient(confPath, tmCmd.OutOrStdout())
+	err != nil
 	if err != nil {
-		return nil, err
+		log.Fatalln(err)
 	}
 
-	client, _ := servingv1client.NewForConfig(restConfig)
-	return clientservingv1.NewKnServingClient(client, namespace), nil
-}
-
-func (params *TmParams) newEventingClient(namespace string) (clienteventingv1alpha1.KnEventingClient, error) {
-	restConfig, err := params.RestConfig()
-	if err != nil {
-		return nil, err
+	p.ConfigSet
+	clientset.Printer.Format = client.Output
+	if debug {
+		clientset.Log.SetDebugLevel()
 	}
+	clientset.Registry.Host = registryHost
+	clientset.Registry.Secret = registrySecret
+	clientset.Registry.SkipTLS = registrySkipTLS
 
-	client, _ := eventing.NewForConfig(restConfig)
-	return clienteventingv1alpha1.NewKnEventingClient(client, namespace), nil
+	// if params.NewServingClient == nil {
+	// 	params.NewServingClient = params.newServingClient
+	// }
+
+	// if params.NewEventingClient == nil {
+	// 	params.NewEventingClient = params.newEventingClient
+	// }
 }
+
+// func (params *TmParams) newServingClient(namespace string) (clientservingv1.KnServingClient, error) {
+// 	restConfig, err := params.RestConfig()
+// 	if err != nil {
+// 		return nil, err
+// 	}
+
+// 	client, _ := servingv1client.NewForConfig(restConfig)
+// 	return clientservingv1.NewKnServingClient(client, namespace), nil
+// }
+
+// func (params *TmParams) newEventingClient(namespace string) (clienteventingv1alpha1.KnEventingClient, error) {
+// 	restConfig, err := params.RestConfig()
+// 	if err != nil {
+// 		return nil, err
+// 	}
+
+// 	client, _ := eventing.NewForConfig(restConfig)
+// 	return clienteventingv1alpha1.NewKnEventingClient(client, namespace), nil
+// }
 
 // RestConfig returns REST config, which can be to use to create specific clientset
 func (params *TmParams) RestConfig() (*rest.Config, error) {
