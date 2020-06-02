@@ -21,6 +21,8 @@ import (
 	// "knative.dev/client/pkg/wait"
 
 	"github.com/spf13/cobra"
+
+	"github.com/triggermesh/tm/pkg/tm/commands"
 )
 
 const (
@@ -28,12 +30,13 @@ const (
 	MaxUpdateRetries = 3
 )
 
-func NewServiceCommand() *cobra.Command {
+func NewServiceCommand(p *commands.TmParams) *cobra.Command {
 	serviceCmd := &cobra.Command{
 		Use:   "service",
 		Short: "Service command group",
 	}
-	// serviceCmd.AddCommand(NewServiceListCommand(p))
+	serviceCmd.AddCommand(newServiceListCommand(p))
+
 	// serviceCmd.AddCommand(NewServiceDescribeCommand(p))
 	// serviceCmd.AddCommand(NewServiceCreateCommand(p))
 	// serviceCmd.AddCommand(NewServiceDeleteCommand(p))

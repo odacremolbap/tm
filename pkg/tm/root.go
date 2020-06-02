@@ -11,6 +11,7 @@ import (
 	"knative.dev/client/pkg/kn/flags"
 
 	"github.com/triggermesh/tm/pkg/tm/commands"
+	"github.com/triggermesh/tm/pkg/tm/commands/service"
 	"github.com/triggermesh/tm/pkg/tm/commands/version"
 )
 
@@ -55,6 +56,7 @@ func newRootCommand(params ...commands.TmParams) *cobra.Command {
 	rootCmd.PersistentFlags().StringVar(&p.KubeCfgPath, "kubeconfig", "", "kubectl config file (default is ~/.kube/config)")
 
 	// root child commands
+	rootCmd.AddCommand(service.NewServiceCommand(p))
 	rootCmd.AddCommand(version.NewVersionCommand(p))
 
 	// Initialize default `help` cmd early to prevent unknown command errors

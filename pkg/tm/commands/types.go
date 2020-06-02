@@ -21,7 +21,6 @@ import (
 	"path/filepath"
 	"runtime"
 
-	"k8s.io/client-go/dynamic"
 	"k8s.io/client-go/rest"
 	"k8s.io/client-go/tools/clientcmd"
 	eventing "knative.dev/eventing/pkg/client/clientset/versioned/typed/eventing/v1alpha1"
@@ -37,11 +36,6 @@ import (
 
 // CfgFile is tm's config file is the path for the Kubernetes config
 var CfgFile string
-
-// Cfg is Kn's configuration values
-var Cfg Config = Config{
-	DefaultConfigDir: newDefaultConfigPath(""),
-}
 
 // Config contains the variables for the Kn config
 type Config struct {
@@ -74,10 +68,6 @@ func (params *TmParams) Initialize() {
 	if params.NewEventingClient == nil {
 		params.NewEventingClient = params.newEventingClient
 	}
-
-	if params.NewDynamicClient == nil {
-		params.NewDynamicClient = params.newDynamicClient
-	}
 }
 
 func (params *TmParams) newServingClient(namespace string) (clientservingv1.KnServingClient, error) {
@@ -98,16 +88,6 @@ func (params *TmParams) newEventingClient(namespace string) (clienteventingv1alp
 
 	client, _ := eventing.NewForConfig(restConfig)
 	return clienteventingv1alpha1.NewKnEventingClient(client, namespace), nil
-}
-
-func (params *TmParams) newDynamicClient(namespace string) (clientdynamic.KnDynamicClient, error) {
-	restConfig, err := params.RestConfig()
-	if err != nil {
-		return nil, err
-	}
-
-	client, _ := dynamic.NewForConfig(restConfig)
-	return clientdynamic.NewKnDynamicClient(client, namespace), nil
 }
 
 // RestConfig returns REST config, which can be to use to create specific clientset
@@ -137,6 +117,10 @@ func (params *TmParams) RestConfig() (*rest.Config, error) {
 // GetClientConfig gets ClientConfig from KubeCfgPath
 func (params *TmParams) GetClientConfig() (clientcmd.ClientConfig, error) {
 	loadingRules := clientcmd.NewDefaultClientConfigLoadingRules()
+	loadingRules.Precedence = append([]string{newDefaultConfigPath("config.json")}, loadingRules.Precedence...)
+
+	// loadingRules.Precedence = []string{newDefaultConfigPath("config.json")}
+	fmt.Printf("loading rules %+v\n", loadingRules)
 	if len(params.KubeCfgPath) == 0 {
 		return clientcmd.NewNonInteractiveDeferredLoadingClientConfig(loadingRules, &clientcmd.ConfigOverrides{}), nil
 	}
@@ -170,5 +154,9 @@ func newDefaultConfigPath(subDir string) string {
 	if runtime.GOOS == "windows" {
 		return filepath.Join(os.Getenv("APPDATA"), "tm", subDir)
 	}
-	return filepath.Join("~", ".config", "tm", subDir)
+	home, err := os.UserHomeDir()
+	if err != nil {
+		home = os.Getenv("HOME")
+	}
+	return filepath.Join(home, ".tm", subDir)
 }

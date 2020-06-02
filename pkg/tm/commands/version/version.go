@@ -21,8 +21,9 @@ import (
 	"fmt"
 
 	"github.com/spf13/cobra"
-	"github.com/triggermesh/tm/pkg/tm/commands"
 	"sigs.k8s.io/yaml"
+
+	"github.com/triggermesh/tm/pkg/tm/commands"
 )
 
 var Version string
